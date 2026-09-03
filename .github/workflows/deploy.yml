@@ -29,11 +29,11 @@ jobs:
           node-version: 22
           cache: npm
       - name: Install dependencies
-        # npm's lockfile can omit Rollup's Linux optional binary when it was
-        # generated on macOS. Install the matching runner binary explicitly.
+        # npm's lockfile can omit platform-native optional packages when it was
+        # generated on macOS. Rebuild the dependency tree on the Linux runner.
         run: |
-          npm install --include=dev --include=optional
-          npm install --no-save @rollup/rollup-linux-x64-gnu@4.63.1
+          rm package-lock.json
+          npm install --include=dev
       - name: Build
         run: npm run build
       - name: Configure Pages
