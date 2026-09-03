@@ -7,9 +7,11 @@ import {
   DatabaseZap,
   Moon,
   Play,
+  Search,
   ShieldCheck,
   Sun,
   TriangleAlert,
+  X,
 } from "lucide-react";
 import {
   createDefaultParser,
@@ -22,6 +24,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -83,12 +86,27 @@ function truncateAddress(value: string) {
   return value.length > 18 ? `${value.slice(0, 8)}…${value.slice(-6)}` : value;
 }
 
+function matchesSampleQuery(sample: (typeof transactionSamples)[number], groupTitle: string, query: string) {
+  if (!query) return true;
+  return [
+    sample.id,
+    sample.label,
+    sample.summary,
+    sample.source,
+    groupTitle,
+    sample.transaction.from,
+    sample.transaction.to ?? "",
+    sample.transaction.data,
+  ].join(" ").toLowerCase().includes(query);
+}
+
 export default function App() {
   const initialSample = transactionSamples[0]!;
   const [theme, setTheme] = useState<Theme>("dark");
   const [source, setSource] = useState(() => formatSample(initialSample));
   const [parseState, setParseState] = useState<ParseState>(() => parseTransactionText(formatSample(initialSample)));
   const [selectedSampleId, setSelectedSampleId] = useState<string | undefined>(initialSample.id);
+  const [sampleQuery, setSampleQuery] = useState("");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -102,6 +120,17 @@ export default function App() {
   const selectedSample = useMemo(
     () => transactionSamples.find((item) => item.id === selectedSampleId),
     [selectedSampleId],
+  );
+  const filteredSampleGroups = useMemo(() => {
+    const query = sampleQuery.trim().toLowerCase();
+    return sampleGroups.flatMap((group) => {
+      const samples = samplesInGroup(group.id).filter((sample) => matchesSampleQuery(sample, group.title, query));
+      return samples.length > 0 ? [{ group, samples }] : [];
+    });
+  }, [sampleQuery]);
+  const filteredSampleCount = useMemo(
+    () => filteredSampleGroups.reduce((count, item) => count + item.samples.length, 0),
+    [filteredSampleGroups],
   );
 
   function selectSample(sampleId: string) {
@@ -123,7 +152,7 @@ export default function App() {
   return (
     <div className="min-h-svh bg-background text-foreground">
       <header className="border-b border-border bg-background/95">
-        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+        <div className="flex h-14 items-center justify-between px-4 sm:px-6">
           <a className="flex items-center gap-2 text-sm font-semibold tracking-tight" href="/" aria-label="Transaction Workbench home">
             <span className="grid size-6 place-items-center rounded-md bg-primary text-[11px] font-black text-primary-foreground">R</span>
             <span>Transaction Workbench</span>
@@ -145,8 +174,8 @@ export default function App() {
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
-        <div className="mb-7 flex flex-col gap-3 border-l-2 border-primary pl-4 sm:flex-row sm:items-end sm:justify-between">
+      <main className="w-full px-4 py-5 sm:px-6 lg:px-8">
+        <div className="mb-5 flex flex-col gap-3 border-l-2 border-primary pl-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="mb-1 text-xs font-semibold uppercase tracking-[0.16em] text-primary">EVM intent parser</p>
             <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Inspect the transaction, not just the calldata.</h1>
@@ -156,45 +185,86 @@ export default function App() {
           </p>
         </div>
 
-        <section className="mb-5" aria-labelledby="examples-title">
-          <Card>
-            <CardHeader className="gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <CardTitle id="examples-title">Example library</CardTitle>
-                <p className="mt-1 text-xs text-muted-foreground">Browse transferable intent patterns before editing the JSON yourself.</p>
-              </div>
-              <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                <DatabaseZap className="size-3.5 text-primary" /> {transactionSamples.length} inspectable inputs
-              </span>
-            </CardHeader>
-            <CardContent className="grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
-              {sampleGroups.map((group) => (
-                <div key={group.id} className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{group.title}</p>
-                  <p className="mt-1 min-h-10 text-xs leading-5 text-muted-foreground">{group.description}</p>
-                  <div className="mt-2 space-y-1.5">
-                    {samplesInGroup(group.id).map((sample) => (
-                      <Button
-                        key={sample.id}
-                        variant={sample.id === selectedSampleId ? "default" : "secondary"}
-                        size="sm"
-                        className="h-auto w-full justify-between gap-2 border border-border px-2.5 py-2 text-left"
-                        onClick={() => selectSample(sample.id)}
-                      >
-                        <span className="min-w-0 truncate">{sample.label}</span>
-                        <span className="shrink-0 rounded-full border border-current/20 px-1.5 py-0.5 text-[10px] font-normal opacity-75">
-                          {sample.source === "confirmed mainnet" ? "mainnet" : "input"}
-                        </span>
-                      </Button>
-                    ))}
+        <div className="grid gap-5 xl:grid-cols-[minmax(18rem,22rem)_minmax(0,1fr)]">
+          <aside className="min-w-0 xl:sticky xl:top-4 xl:self-start" aria-labelledby="examples-title">
+            <Card className="overflow-hidden">
+              <CardHeader className="gap-3 border-b border-border pb-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <CardTitle id="examples-title">Transaction types</CardTitle>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">Choose a sample or filter by intent, protocol, address, or calldata.</p>
                   </div>
+                  <span className="inline-flex shrink-0 items-center gap-1.5 text-xs text-muted-foreground">
+                    <DatabaseZap className="size-3.5 text-primary" /> {filteredSampleCount}/{transactionSamples.length}
+                  </span>
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-        </section>
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-3 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    value={sampleQuery}
+                    onChange={(event) => setSampleQuery(event.target.value)}
+                    placeholder="Filter transactions…"
+                    className="pr-9 pl-9"
+                    aria-label="Filter transaction examples"
+                  />
+                  {sampleQuery && (
+                    <button
+                      type="button"
+                      className="absolute right-2 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded text-muted-foreground hover:bg-secondary hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      onClick={() => setSampleQuery("")}
+                      aria-label="Clear transaction filter"
+                    >
+                      <X className="size-3.5" />
+                    </button>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="max-h-[calc(100svh-14rem)] space-y-5 overflow-y-auto p-3">
+                {filteredSampleGroups.map(({ group, samples }) => (
+                  <section key={group.id} aria-labelledby={`${group.id}-examples`}>
+                    <div className="px-1 pb-2">
+                      <p id={`${group.id}-examples`} className="text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">{group.title}</p>
+                      <p className="mt-1 text-xs leading-5 text-muted-foreground">{group.description}</p>
+                    </div>
+                    <div className="space-y-1.5">
+                      {samples.map((sample) => {
+                        const selected = sample.id === selectedSampleId;
+                        return (
+                          <button
+                            key={sample.id}
+                            type="button"
+                            onClick={() => selectSample(sample.id)}
+                            className={cn(
+                              "w-full rounded-lg border px-3 py-2.5 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                              selected
+                                ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                                : "border-border bg-secondary/30 hover:bg-secondary/70",
+                            )}
+                          >
+                            <span className="flex items-start justify-between gap-2">
+                              <span className="min-w-0 text-sm font-medium leading-5">{sample.label}</span>
+                              <span className={cn("shrink-0 rounded-full border px-1.5 py-0.5 text-[10px] font-medium uppercase tracking-[0.1em]", selected ? "border-current/25" : "border-border text-muted-foreground")}>
+                                {sample.source === "confirmed mainnet" ? "mainnet" : "input"}
+                              </span>
+                            </span>
+                            <span className={cn("mt-1 block max-h-10 overflow-hidden text-xs leading-5", selected ? "text-primary-foreground/75" : "text-muted-foreground")}>{sample.summary}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </section>
+                ))}
+                {filteredSampleCount === 0 && (
+                  <div className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-sm text-muted-foreground">
+                    No transaction types match “{sampleQuery}”.
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </aside>
 
-        <div className="grid gap-5 lg:grid-cols-[minmax(0,0.96fr)_minmax(0,1.04fr)]">
+          <section className="min-w-0" aria-label="Transaction details">
+            <div className="grid gap-5 2xl:grid-cols-[minmax(22rem,0.88fr)_minmax(30rem,1.12fr)]">
           <Card aria-labelledby="source-title">
             <CardHeader className="flex-row items-center justify-between gap-4">
               <div>
@@ -303,9 +373,9 @@ export default function App() {
                   )}
 
                   {parseState.result.route && (
-                    <div className="flex items-center justify-between border-t border-border px-5 py-3 text-xs text-muted-foreground">
-                      <span>Matched route</span>
-                      <code>{parseState.result.route.id}</code>
+                    <div className="flex items-start justify-between gap-4 border-t border-border px-5 py-3 text-xs text-muted-foreground">
+                      <span className="shrink-0">Matched route</span>
+                      <code className="min-w-0 break-all text-right">{parseState.result.route.id}</code>
                     </div>
                   )}
 
@@ -318,7 +388,9 @@ export default function App() {
                 </>
               ) : null}
             </CardContent>
-          </Card>
+            </Card>
+            </div>
+          </section>
         </div>
 
         <section className="mt-5 grid gap-5 md:grid-cols-3" aria-label="Parser boundaries">
