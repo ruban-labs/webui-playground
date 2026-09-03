@@ -29,6 +29,7 @@ import {
   sampleGroups,
   samplesInGroup,
   transactionSamples,
+  uniswapUniversalRouters,
   uniswapV3Routers,
 } from "@/lib/samples";
 import { cn } from "@/lib/utils";
@@ -36,7 +37,7 @@ import { cn } from "@/lib/utils";
 type Theme = "light" | "dark";
 type ParseState = { result?: ParseResult; error?: string };
 
-const parser = createDefaultParser({ uniswapV3Routers });
+const parser = createDefaultParser({ uniswapV3Routers, uniswapUniversalRouters });
 parser.registerAbi({
   signature: "deposit(uint256,address)",
   abi: parseAbi(["function deposit(uint256 assets,address receiver)"]),
