@@ -14,8 +14,18 @@ npm run dev
 
 Paste a JSON `TransactionInput` into the workbench. Use
 `contract.tokenStandard` only when it comes from a trusted contract-indexing
-layer: `approve(address,uint256)` is otherwise ambiguous between ERC-20 and
-ERC-721.
+layer. Without that context, standard ERC-20/ERC-721/ERC-1155 selectors remain
+an ABI-decoded contract-call fallback instead of being guessed.
+
+## Examples
+
+The on-page library groups 18 complete `eth_sendTransaction` inputs into
+transfers, permissions, NFTs, swaps, and fallbacks. The mainnet-labelled
+entries are fixed successful Ethereum transactions; the controlled entries
+make edge cases reproducible. All parsing remains local to the browser. The
+Uniswap V3 example is specialized only because this application configures the
+canonical mainnet SwapRouter address at startup; it does not discover routers
+over the network.
 
 ## Deploy
 
