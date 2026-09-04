@@ -3,6 +3,7 @@ import type {
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
   CircleCctpV2TokenMessenger,
+  Connext,
   LayerZeroV2Oft,
   OpStackPortal,
   ScrollL1GatewayRouter,
@@ -20,7 +21,7 @@ export interface TransactionSample {
   group: SampleGroupId;
   label: string;
   summary: string;
-  source: "confirmed mainnet" | "controlled input";
+  source: "confirmed mainnet" | "confirmed EVM" | "controlled input";
   transaction: TransactionInput;
 }
 
@@ -81,6 +82,15 @@ export const acrossV3SpokePools: readonly AcrossV3SpokePool[] = [
     address: "0x5c7bcd6e7de5423a257d81b442095a1a6ced35c5",
     // This binding is required before a payable WETH-shaped deposit is native input.
     wrappedNativeToken: "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+  },
+];
+
+export const connexts: readonly Connext[] = [
+  {
+    chainId: 10,
+    address: "0x8f7492DE823025b4CfaAB1D34c58963F2af5DEDA",
+    // Connext domains are a separate uint32 namespace, never inferred as chain ids.
+    destinations: [{ domain: 6648936, chainId: 1 }],
   },
 ];
 
@@ -158,9 +168,9 @@ export const sampleGroups: readonly SampleGroup[] = [
 ];
 
 /**
- * Every entry is an eth_sendTransaction-shaped input. "Confirmed mainnet"
- * samples are fixed successful Ethereum transactions; controlled inputs make
- * edge cases legible without implying token metadata or risk information.
+ * Every entry is an eth_sendTransaction-shaped input. Confirmed samples are
+ * fixed successful EVM transactions; controlled inputs make edge cases
+ * legible without implying token metadata or risk information.
  */
 export const transactionSamples: readonly TransactionSample[] = [
   {
@@ -233,6 +243,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x5c7bcd6e7de5423a257d81b442095a1a6ced35c5",
       data: acrossV3NativeDepositData,
       value: "9835101235133293000",
+    },
+  },
+  {
+    id: "optimism-connext-erc20-bridge-request",
+    group: "bridges",
+    label: "Connext ERC-20 bridge request",
+    summary: "Confirmed Optimism → Ethereum direct xcall, block 107,619,863. It preserves the submitted amount, slippage, and requested relayer fee without claiming a destination fill or delivery.",
+    source: "confirmed EVM",
+    transaction: {
+      chainId: 10,
+      from: "0x11e52c75998fe2e7928b191bfc5b25937ca16741",
+      to: "0x8f7492de823025b4cfaab1d34c58963f2af5deda",
+      data: "0x93f18ac5000000000000000000000000000000000000000000000000000000000065746800000000000000000000000011e52c75998fe2e7928b191bfc5b25937ca167410000000000000000000000007f5c764cbc14f9669b88837ca1490cca17c3160700000000000000000000000011e52c75998fe2e7928b191bfc5b25937ca1674100000000000000000000000000000000000000000000000000000000b400b8d8000000000000000000000000000000000000000000000000000000000000012c00000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000001ca95440000000000000000000000000000000000000000000000000000000000000000",
+      value: "0",
     },
   },
   {
