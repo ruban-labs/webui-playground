@@ -11,6 +11,7 @@ import type {
   TransactionInput,
   UniswapUniversalRouter,
   UniswapV3Router,
+  WormholeTokenBridge,
   ZkSyncBridgehub,
 } from "@ruban-labs/web3-tx-parser";
 
@@ -91,6 +92,15 @@ export const connexts: readonly Connext[] = [
     address: "0x8f7492DE823025b4CfaAB1D34c58963F2af5DEDA",
     // Connext domains are a separate uint32 namespace, never inferred as chain ids.
     destinations: [{ domain: 6648936, chainId: 1 }],
+  },
+];
+
+export const wormholeTokenBridges: readonly WormholeTokenBridge[] = [
+  {
+    chainId: 1,
+    address: "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
+    // Wormhole's uint16 chain id is explicitly mapped, never treated as an EVM id.
+    destinations: [{ wormholeChainId: 4, chainId: 56 }],
   },
 ];
 
@@ -256,6 +266,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       from: "0x11e52c75998fe2e7928b191bfc5b25937ca16741",
       to: "0x8f7492de823025b4cfaab1d34c58963f2af5deda",
       data: "0x93f18ac5000000000000000000000000000000000000000000000000000000000065746800000000000000000000000011e52c75998fe2e7928b191bfc5b25937ca167410000000000000000000000007f5c764cbc14f9669b88837ca1490cca17c3160700000000000000000000000011e52c75998fe2e7928b191bfc5b25937ca1674100000000000000000000000000000000000000000000000000000000b400b8d8000000000000000000000000000000000000000000000000000000000000012c00000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000000000000000000000000001ca95440000000000000000000000000000000000000000000000000000000000000000",
+      value: "0",
+    },
+  },
+  {
+    id: "mainnet-wormhole-token-bridge-erc20-request",
+    group: "bridges",
+    label: "Wormhole ERC-20 bridge request",
+    summary: "Confirmed Ethereum → BNB Smart Chain Token Bridge request, block 25,522,598. It preserves the submitted ERC-20 amount and requested arbiter fee without asserting lock/burn, destination mint, or delivery.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x4cc2c6e14c96aed6e99087c4477e4708a5db11a4",
+      to: "0x3ee18b2214aff97000d974cf647e7c347e8fa585",
+      data: "0x0f5287b0000000000000000000000000203240c141dd80dcefc43f782a1321bbdf8dc89f00000000000000000000000000000000000000000000009cacf8cb332a0b1b1800000000000000000000000000000000000000000000000000000000000000040000000000000000000000004cc2c6e14c96aed6e99087c4477e4708a5db11a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000cb47b3b1",
       value: "0",
     },
   },

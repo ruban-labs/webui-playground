@@ -44,6 +44,7 @@ import {
   transactionSamples,
   uniswapUniversalRouters,
   uniswapV3Routers,
+  wormholeTokenBridges,
 } from "@/lib/samples";
 import { cn } from "@/lib/utils";
 
@@ -56,6 +57,7 @@ const parser = createDefaultParser({
   circleCctpV1TokenMessengers,
   circleCctpV2TokenMessengers,
   connexts,
+  wormholeTokenBridges,
   layerZeroV2Ofts,
   opStackPortals,
   scrollL1GatewayRouters,
