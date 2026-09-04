@@ -1,6 +1,7 @@
 import type {
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
+  CircleCctpV2TokenMessenger,
   LayerZeroV2Oft,
   OpStackPortal,
   ScrollL1GatewayRouter,
@@ -63,6 +64,15 @@ export const circleCctpV1TokenMessengers: readonly CircleCctpV1TokenMessenger[] 
     address: "0xbd3fa81b58ba92a82136038b25adec7066af3155",
     // Circle domains are an independent namespace and must be bound explicitly.
     destinations: [{ domain: 3, chainId: 42161 }],
+  },
+];
+
+export const circleCctpV2TokenMessengers: readonly CircleCctpV2TokenMessenger[] = [
+  {
+    chainId: 1,
+    address: "0x28b5a0e9c621a5badaa536219b3a228c8168cf5d",
+    // Circle V2 domains are independent from EVM chain ids and explicitly bound.
+    destinations: [{ domain: 6, chainId: 8453 }],
   },
 ];
 
@@ -196,6 +206,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       from: "0xa875890465da20062bcf3b024bf7d54e69c725a8",
       to: "0xbd3fa81b58ba92a82136038b25adec7066af3155",
       data: "0x6fd3504e00000000000000000000000000000000000000000000000000000000e8d4a5100000000000000000000000000000000000000000000000000000000000000003000000000000000000000000a875890465da20062bcf3b024bf7d54e69c725a8000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      value: "0",
+    },
+  },
+  {
+    id: "mainnet-circle-cctp-v2-standard-burn",
+    group: "bridges",
+    label: "Circle CCTP V2 USDC burn",
+    summary: "Confirmed Ethereum → Base burn with any-caller delivery. This is a burn request only: attestation, mint, and final delivery are not claimed.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x07ae8551be970cb1cca11dd7a11f47ae82e70e67",
+      to: "0x28b5a0e9c621a5badaa536219b3a228c8168cf5d",
+      data: "0x8e0250ee00000000000000000000000000000000000000000000000000000015c2abc5f7000000000000000000000000000000000000000000000000000000000000000600000000000000000000000007ae8551be970cb1cca11dd7a11f47ae82e70e67000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb480000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007d0",
       value: "0",
     },
   },
