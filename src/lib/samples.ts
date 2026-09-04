@@ -4,6 +4,7 @@ import type {
   CircleCctpV1TokenMessenger,
   CircleCctpV2TokenMessenger,
   Connext,
+  HyperlaneTokenRouter,
   LayerZeroV2Oft,
   OpStackPortal,
   ScrollL1GatewayRouter,
@@ -101,6 +102,17 @@ export const wormholeTokenBridges: readonly WormholeTokenBridge[] = [
     address: "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
     // Wormhole's uint16 chain id is explicitly mapped, never treated as an EVM id.
     destinations: [{ wormholeChainId: 4, chainId: 56 }],
+  },
+];
+
+export const hyperlaneTokenRouters: readonly HyperlaneTokenRouter[] = [
+  {
+    chainId: 1,
+    address: "0x44f161ae29361e332dea039dfa2f404e0bc5b5cc",
+    // transferRemote calldata has no source token address; it is trusted configuration.
+    asset: "0xcf5104d094e3864cfcbda43b82e1cefd26a016eb",
+    // Hyperlane domain ids are explicit; they are not inferred as EVM chain ids.
+    destinations: [{ domain: 56, chainId: 56 }],
   },
 ];
 
@@ -281,6 +293,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x3ee18b2214aff97000d974cf647e7c347e8fa585",
       data: "0x0f5287b0000000000000000000000000203240c141dd80dcefc43f782a1321bbdf8dc89f00000000000000000000000000000000000000000000009cacf8cb332a0b1b1800000000000000000000000000000000000000000000000000000000000000040000000000000000000000004cc2c6e14c96aed6e99087c4477e4708a5db11a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000cb47b3b1",
       value: "0",
+    },
+  },
+  {
+    id: "mainnet-hyperlane-warp-route-erc20-request",
+    group: "bridges",
+    label: "Hyperlane Warp Route ERC-20 request",
+    summary: "Confirmed Ethereum → BNB Smart Chain transferRemote request, block 25,156,587. The source asset is explicit trusted configuration because the router calldata itself does not name it; attached ETH remains an opaque, state-dependent fee budget.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0xd4ade84d1e4b1015a5dda8eb6c43858a3ac905f5",
+      to: "0x44f161ae29361e332dea039dfa2f404e0bc5b5cc",
+      data: "0x81b4e8b40000000000000000000000000000000000000000000000000000000000000038000000000000000000000000d4ade84d1e4b1015a5dda8eb6c43858a3ac905f5000000000000000000000000000000000000000000001968abc251bbd1180000",
+      value: "91369222399432",
     },
   },
   {
