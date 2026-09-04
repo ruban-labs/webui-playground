@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   formatSample,
+  acrossV3SpokePools,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   circleCctpV2TokenMessengers,
@@ -49,6 +50,7 @@ type Theme = "light" | "dark";
 type ParseState = { result?: ParseResult; error?: string };
 
 const parser = createDefaultParser({
+  acrossV3SpokePools,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   circleCctpV2TokenMessengers,
