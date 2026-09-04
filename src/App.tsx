@@ -29,6 +29,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
   formatSample,
+  celerCbridgeBridges,
   sampleGroups,
   samplesInGroup,
   transactionSamples,
@@ -40,7 +41,7 @@ import { cn } from "@/lib/utils";
 type Theme = "light" | "dark";
 type ParseState = { result?: ParseResult; error?: string };
 
-const parser = createDefaultParser({ uniswapV3Routers, uniswapUniversalRouters });
+const parser = createDefaultParser({ celerCbridgeBridges, uniswapV3Routers, uniswapUniversalRouters });
 parser.registerAbi({
   signature: "deposit(uint256,address)",
   abi: parseAbi(["function deposit(uint256 assets,address receiver)"]),
@@ -58,6 +59,7 @@ const actionLabels: Record<string, string> = {
   collection_approval: "Collection approval",
   collection_revoke: "Collection revoke",
   swap: "Swap",
+  bridge_transfer: "Bridge transfer",
   contract_call: "Contract call",
   unknown: "Unknown intent",
 };

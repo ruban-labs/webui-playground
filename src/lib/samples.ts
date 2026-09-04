@@ -1,6 +1,6 @@
-import type { TransactionInput, UniswapUniversalRouter, UniswapV3Router } from "@ruban-labs/web3-tx-parser";
+import type { CelerCbridgeBridge, TransactionInput, UniswapUniversalRouter, UniswapV3Router } from "@ruban-labs/web3-tx-parser";
 
-export type SampleGroupId = "transfers" | "permissions" | "nfts" | "swaps" | "fallbacks";
+export type SampleGroupId = "transfers" | "permissions" | "nfts" | "swaps" | "bridges" | "fallbacks";
 
 export interface TransactionSample {
   id: string;
@@ -37,11 +37,21 @@ export const uniswapUniversalRouters: readonly UniswapUniversalRouter[] = [
   },
 ];
 
+export const celerCbridgeBridges: readonly CelerCbridgeBridge[] = [
+  {
+    chainId: 1,
+    address: "0x5427fefa711eff984124bfbb1ab6fbf5e3da1820",
+    // cBridge destination ids are not assumed to be EVM chain ids.
+    destinations: [{ cbridgeChainId: "42161", chainId: 42161 }],
+  },
+];
+
 export const sampleGroups: readonly SampleGroup[] = [
   { id: "transfers", title: "Transfers", description: "Native value and fungible-token movement." },
   { id: "permissions", title: "Permissions", description: "Allowance and operator changes." },
   { id: "nfts", title: "NFTs", description: "Single-token and ERC-1155 movement." },
   { id: "swaps", title: "Swaps", description: "Trusted router routes and fully proven settlement." },
+  { id: "bridges", title: "Bridges", description: "Trusted cross-chain intents with explicit destination bindings." },
   { id: "fallbacks", title: "Fallbacks", description: "Useful outcomes when intent is not specialized." },
 ];
 
@@ -93,6 +103,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       data: "0x23b872dd00000000000000000000000060000000000000000000000000000000000000060000000000000000000000002000000000000000000000000000000000000002000000000000000000000000000000000000000000000000ab54a98ceb1f0ad2",
       value: "0",
       contract: { tokenStandard: "erc20" },
+    },
+  },
+  {
+    id: "mainnet-celer-cbridge-native-transfer",
+    group: "bridges",
+    label: "Celer cBridge native transfer",
+    summary: "Confirmed Ethereum request; destination binding is supplied explicitly, not inferred from Celer's id.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x43f619e97a2729f78489bd14b9d38abc11f25cd7",
+      to: "0x5427fefa711eff984124bfbb1ab6fbf5e3da1820",
+      data: "0x3f2e5fc300000000000000000000000043f619e97a2729f78489bd14b9d38abc11f25cd7000000000000000000000000000000000000000000000000000aa87bee538000000000000000000000000000000000000000000000000000000000000000a4b10000000000000000000000000000000000000000000000000000019e12416b550000000000000000000000000000000000000000000000000000000000003faf",
+      value: "3000000000000000",
     },
   },
   {
