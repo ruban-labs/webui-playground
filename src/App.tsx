@@ -31,6 +31,7 @@ import {
   formatSample,
   acrossV3SpokePools,
   arbitrumArbSysPrecompiles,
+  arbitrumL2GatewayRouters,
   axelarInterchainTokenServices,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
@@ -59,6 +60,7 @@ type ParseState = { result?: ParseResult; error?: string };
 const parser = createDefaultParser({
   acrossV3SpokePools,
   arbitrumArbSysPrecompiles,
+  arbitrumL2GatewayRouters,
   axelarInterchainTokenServices,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,

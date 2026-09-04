@@ -1,6 +1,7 @@
 import type {
   AcrossV3SpokePool,
   ArbitrumArbSysPrecompile,
+  ArbitrumL2GatewayRouter,
   AxelarInterchainTokenService,
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
@@ -159,6 +160,15 @@ export const arbitrumArbSysPrecompiles: readonly ArbitrumArbSysPrecompile[] = [
     address: "0x0000000000000000000000000000000000000064",
     // ArbSys is shared across Arbitrum deployments, so this binding remains
     // app-owned rather than inferred from the precompile address.
+    destinationChainId: 1,
+  },
+];
+
+export const arbitrumL2GatewayRouters: readonly ArbitrumL2GatewayRouter[] = [
+  {
+    chainId: 42161,
+    address: "0x5288c571Fd7aD117beA99bF60FE0846C4E84F933",
+    // This configured target is not inferred from the router address.
     destinationChainId: 1,
   },
 ];
@@ -382,6 +392,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x0000000000000000000000000000000000000064",
       data: "0x25e160630000000000000000000000002ce910fbba65b454bbaf6a18c952a70f3bcd8299",
       value: "67150000000000000000",
+    },
+  },
+  {
+    id: "arbitrum-l2-gateway-router-erc20-withdrawal-request",
+    group: "bridges",
+    label: "Arbitrum ERC-20 withdrawal request",
+    summary: "Confirmed Arbitrum → Ethereum L2 Gateway Router request, block 496,603,392. It preserves the explicit L1 token address, amount, and recipient; the L2 counterpart, message proof, execution, and final receipt are unresolved.",
+    source: "confirmed EVM",
+    transaction: {
+      chainId: 42161,
+      from: "0x1ae7e5184aeaa67e1cb35d2292111cd0be69bc40",
+      to: "0x5288c571fd7ad117bea99bf60fe0846c4e84f933",
+      data: "0x7b3a3c8b000000000000000000000000f17a3fe536f8f7847f1385ec1bc967b2ca9cae8d0000000000000000000000001ae7e5184aeaa67e1cb35d2292111cd0be69bc4000000000000000000000000000000000000000000000000002d6d9c748ee3f6e00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
+      value: "0",
     },
   },
   {
