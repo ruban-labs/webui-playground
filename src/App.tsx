@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   formatSample,
   acrossV3SpokePools,
+  axelarInterchainTokenServices,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   circleCctpV2TokenMessengers,
@@ -54,6 +55,7 @@ type ParseState = { result?: ParseResult; error?: string };
 
 const parser = createDefaultParser({
   acrossV3SpokePools,
+  axelarInterchainTokenServices,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   circleCctpV2TokenMessengers,

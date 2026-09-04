@@ -1,5 +1,6 @@
 import type {
   AcrossV3SpokePool,
+  AxelarInterchainTokenService,
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
   CircleCctpV2TokenMessenger,
@@ -113,6 +114,20 @@ export const hyperlaneTokenRouters: readonly HyperlaneTokenRouter[] = [
     asset: "0xcf5104d094e3864cfcbda43b82e1cefd26a016eb",
     // Hyperlane domain ids are explicit; they are not inferred as EVM chain ids.
     destinations: [{ domain: 56, chainId: 56 }],
+  },
+];
+
+export const axelarInterchainTokenServices: readonly AxelarInterchainTokenService[] = [
+  {
+    chainId: 1,
+    address: "0xB5FB4BE02232B1bBA4dC8f81dc24C26980dE9e3C",
+    // Axelar strings become EVM chain ids only through this application-owned binding.
+    destinations: [{ destinationChain: "binance", chainId: 56 }],
+    // ITS calldata has a token id rather than a token address; this is trusted metadata.
+    tokens: [{
+      tokenId: "0x4eed4be1acf5e047f86fed1d359d4767bb2569b42c9aac71e91d27efc56b8815",
+      asset: "0x2598c30330d5771ae9f983979209486ae26de875",
+    }],
   },
 ];
 
@@ -307,6 +322,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x44f161ae29361e332dea039dfa2f404e0bc5b5cc",
       data: "0x81b4e8b40000000000000000000000000000000000000000000000000000000000000038000000000000000000000000d4ade84d1e4b1015a5dda8eb6c43858a3ac905f5000000000000000000000000000000000000000000001968abc251bbd1180000",
       value: "91369222399432",
+    },
+  },
+  {
+    id: "mainnet-axelar-its-token-only-request",
+    group: "bridges",
+    label: "Axelar ITS token-only request",
+    summary: "Confirmed Ethereum → BNB Smart Chain empty-metadata ITS request, block 25,115,590. Token id, source asset, and Axelar chain name are explicit configuration; submitted gas value is retained without claiming the final fee or delivery.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x49719d256a5ea16bfa579ea16e95bea9fa41a452",
+      to: "0xb5fb4be02232b1bba4dc8f81dc24c26980de9e3c",
+      data: "0xda081c734eed4be1acf5e047f86fed1d359d4767bb2569b42c9aac71e91d27efc56b881500000000000000000000000000000000000000000000000000000000000000c0000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000040f87042f7b5fbcfc76d5a0000000000000000000000000000000000000000000000000000000000000140000000000000000000000000000000000000000000000000000014ba263c8031000000000000000000000000000000000000000000000000000000000000000762696e616e636500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001449719d256a5ea16bfa579ea16e95bea9fa41a4520000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      value: "22789737971761",
     },
   },
   {
