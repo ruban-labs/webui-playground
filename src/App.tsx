@@ -31,6 +31,7 @@ import {
   formatSample,
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
+  layerZeroV2Ofts,
   sampleGroups,
   samplesInGroup,
   transactionSamples,
@@ -45,6 +46,7 @@ type ParseState = { result?: ParseResult; error?: string };
 const parser = createDefaultParser({
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
+  layerZeroV2Ofts,
   uniswapV3Routers,
   uniswapUniversalRouters,
 });
