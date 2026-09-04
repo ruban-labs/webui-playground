@@ -13,6 +13,7 @@ import type {
   TransactionInput,
   UniswapUniversalRouter,
   UniswapV3Router,
+  WormholeNativeTokenTransferManager,
   WormholeTokenBridge,
   ZkSyncBridgehub,
 } from "@ruban-labs/web3-tx-parser";
@@ -103,6 +104,17 @@ export const wormholeTokenBridges: readonly WormholeTokenBridge[] = [
     address: "0x3ee18B2214AFF97000D974cf647E7C347E8fa585",
     // Wormhole's uint16 chain id is explicitly mapped, never treated as an EVM id.
     destinations: [{ wormholeChainId: 4, chainId: 56 }],
+  },
+];
+
+export const wormholeNativeTokenTransferManagers: readonly WormholeNativeTokenTransferManager[] = [
+  {
+    chainId: 1,
+    address: "0x5293158bf7a81ed05418da497a80f7e6dbf4477e",
+    // The manager calldata does not include its underlying ERC-20 asset.
+    asset: "0xdd468a1ddc392dcdbef6db6e34e89aa338f9f186",
+    // Wormhole ids are a distinct uint16 namespace and require an app-owned mapping.
+    destinations: [{ wormholeChainId: 30, chainId: 8453 }],
   },
 ];
 
@@ -307,6 +319,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       from: "0x4cc2c6e14c96aed6e99087c4477e4708a5db11a4",
       to: "0x3ee18b2214aff97000d974cf647e7c347e8fa585",
       data: "0x0f5287b0000000000000000000000000203240c141dd80dcefc43f782a1321bbdf8dc89f00000000000000000000000000000000000000000000009cacf8cb332a0b1b1800000000000000000000000000000000000000000000000000000000000000040000000000000000000000004cc2c6e14c96aed6e99087c4477e4708a5db11a4000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000cb47b3b1",
+      value: "0",
+    },
+  },
+  {
+    id: "mainnet-wormhole-ntt-advanced-transfer-request",
+    group: "bridges",
+    label: "Wormhole NTT advanced transfer request",
+    summary: "Confirmed Ethereum → Base Native Token Transfer request, block 25,803,920. It preserves the submitted amount, queue request, refund address, and opaque transceiver instructions without claiming burn, attestation, delivery, or refund behavior.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x4cc2c6e14c96aed6e99087c4477e4708a5db11a4",
+      to: "0x5293158bf7a81ed05418da497a80f7e6dbf4477e",
+      data: "0xb293f97f000000000000000000000000000000000000000000000010af5d700d02502c00000000000000000000000000000000000000000000000000000000000000001e0000000000000000000000004cc2c6e14c96aed6e99087c4477e4708a5db11a40000000000000000000000004cc2c6e14c96aed6e99087c4477e4708a5db11a4000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000c000000000000000000000000000000000000000000000000000000000000000040100010100000000000000000000000000000000000000000000000000000000",
       value: "0",
     },
   },
