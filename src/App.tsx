@@ -30,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   formatSample,
   celerCbridgeBridges,
+  circleCctpV1TokenMessengers,
   sampleGroups,
   samplesInGroup,
   transactionSamples,
@@ -41,7 +42,12 @@ import { cn } from "@/lib/utils";
 type Theme = "light" | "dark";
 type ParseState = { result?: ParseResult; error?: string };
 
-const parser = createDefaultParser({ celerCbridgeBridges, uniswapV3Routers, uniswapUniversalRouters });
+const parser = createDefaultParser({
+  celerCbridgeBridges,
+  circleCctpV1TokenMessengers,
+  uniswapV3Routers,
+  uniswapUniversalRouters,
+});
 parser.registerAbi({
   signature: "deposit(uint256,address)",
   abi: parseAbi(["function deposit(uint256 assets,address receiver)"]),

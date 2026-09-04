@@ -1,4 +1,10 @@
-import type { CelerCbridgeBridge, TransactionInput, UniswapUniversalRouter, UniswapV3Router } from "@ruban-labs/web3-tx-parser";
+import type {
+  CelerCbridgeBridge,
+  CircleCctpV1TokenMessenger,
+  TransactionInput,
+  UniswapUniversalRouter,
+  UniswapV3Router,
+} from "@ruban-labs/web3-tx-parser";
 
 export type SampleGroupId = "transfers" | "permissions" | "nfts" | "swaps" | "bridges" | "fallbacks";
 
@@ -43,6 +49,15 @@ export const celerCbridgeBridges: readonly CelerCbridgeBridge[] = [
     address: "0x5427fefa711eff984124bfbb1ab6fbf5e3da1820",
     // cBridge destination ids are not assumed to be EVM chain ids.
     destinations: [{ cbridgeChainId: "42161", chainId: 42161 }],
+  },
+];
+
+export const circleCctpV1TokenMessengers: readonly CircleCctpV1TokenMessenger[] = [
+  {
+    chainId: 1,
+    address: "0xbd3fa81b58ba92a82136038b25adec7066af3155",
+    // Circle domains are an independent namespace and must be bound explicitly.
+    destinations: [{ domain: 3, chainId: 42161 }],
   },
 ];
 
@@ -117,6 +132,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x5427fefa711eff984124bfbb1ab6fbf5e3da1820",
       data: "0x3f2e5fc300000000000000000000000043f619e97a2729f78489bd14b9d38abc11f25cd7000000000000000000000000000000000000000000000000000aa87bee538000000000000000000000000000000000000000000000000000000000000000a4b10000000000000000000000000000000000000000000000000000019e12416b550000000000000000000000000000000000000000000000000000000000003faf",
       value: "3000000000000000",
+    },
+  },
+  {
+    id: "mainnet-circle-cctp-v1-standard-burn",
+    group: "bridges",
+    label: "Circle CCTP V1 USDC burn",
+    summary: "Confirmed Ethereum → Arbitrum burn; the bytes32 recipient is shown as an address only because it is canonical EVM encoding.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0xa875890465da20062bcf3b024bf7d54e69c725a8",
+      to: "0xbd3fa81b58ba92a82136038b25adec7066af3155",
+      data: "0x6fd3504e00000000000000000000000000000000000000000000000000000000e8d4a5100000000000000000000000000000000000000000000000000000000000000003000000000000000000000000a875890465da20062bcf3b024bf7d54e69c725a8000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      value: "0",
     },
   },
   {
