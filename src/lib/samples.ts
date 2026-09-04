@@ -1,6 +1,7 @@
 import type {
   AcrossV3SpokePool,
   ArbitrumArbSysPrecompile,
+  ArbitrumL1GatewayRouter,
   ArbitrumL2GatewayRouter,
   AxelarInterchainTokenService,
   CelerCbridgeBridge,
@@ -161,6 +162,15 @@ export const arbitrumArbSysPrecompiles: readonly ArbitrumArbSysPrecompile[] = [
     // ArbSys is shared across Arbitrum deployments, so this binding remains
     // app-owned rather than inferred from the precompile address.
     destinationChainId: 1,
+  },
+];
+
+export const arbitrumL1GatewayRouters: readonly ArbitrumL1GatewayRouter[] = [
+  {
+    chainId: 1,
+    address: "0x72Ce9c846789fdB6fC1f34aC4AD25Dd9ef7031ef",
+    // The target chain is explicit application configuration, not address inference.
+    destinationChainId: 42161,
   },
 ];
 
@@ -406,6 +416,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x5288c571fd7ad117bea99bf60fe0846c4e84f933",
       data: "0x7b3a3c8b000000000000000000000000f17a3fe536f8f7847f1385ec1bc967b2ca9cae8d0000000000000000000000001ae7e5184aeaa67e1cb35d2292111cd0be69bc4000000000000000000000000000000000000000000000000002d6d9c748ee3f6e00000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000",
       value: "0",
+    },
+  },
+  {
+    id: "mainnet-arbitrum-l1-gateway-router-erc20-deposit-request",
+    group: "bridges",
+    label: "Arbitrum ERC-20 deposit request",
+    summary: "Confirmed Ethereum → Arbitrum L1 Gateway Router request, block 25,902,055. It keeps the ERC-20 amount separate from the retryable-ticket fee budget and does not infer L2 token mapping, ticket execution, or final delivery.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0x47cec4dac40d8f39dc51e8b85c2f0ec3b59af441",
+      to: "0x72ce9c846789fdb6fc1f34ac4ad25dd9ef7031ef",
+      data: "0xd2ce7d65000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb4800000000000000000000000047cec4dac40d8f39dc51e8b85c2f0ec3b59af44100000000000000000000000000000000000000000000000000000000cab724400000000000000000000000000000000000000000000000000000000000043238000000000000000000000000000000000000000000000000000000000728e2c000000000000000000000000000000000000000000000000000000000000000c00000000000000000000000000000000000000000000000000000000000000060000000000000000000000000000000000000000000000000000000b88843d48000000000000000000000000000000000000000000000000000000000000000400000000000000000000000000000000000000000000000000000000000000000",
+      value: "33825560129152",
     },
   },
   {
