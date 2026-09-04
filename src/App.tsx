@@ -32,6 +32,7 @@ import {
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   layerZeroV2Ofts,
+  stargateV2Pools,
   sampleGroups,
   samplesInGroup,
   transactionSamples,
@@ -47,6 +48,7 @@ const parser = createDefaultParser({
   celerCbridgeBridges,
   circleCctpV1TokenMessengers,
   layerZeroV2Ofts,
+  stargateV2Pools,
   uniswapV3Routers,
   uniswapUniversalRouters,
 });
