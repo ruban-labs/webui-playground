@@ -1,5 +1,6 @@
 import type {
   AcrossV3SpokePool,
+  ArbitrumArbSysPrecompile,
   AxelarInterchainTokenService,
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
@@ -148,6 +149,16 @@ export const opStandardBridges: readonly OpStandardBridge[] = [
   {
     chainId: 10,
     address: "0x4200000000000000000000000000000000000010",
+    destinationChainId: 1,
+  },
+];
+
+export const arbitrumArbSysPrecompiles: readonly ArbitrumArbSysPrecompile[] = [
+  {
+    chainId: 42161,
+    address: "0x0000000000000000000000000000000000000064",
+    // ArbSys is shared across Arbitrum deployments, so this binding remains
+    // app-owned rather than inferred from the precompile address.
     destinationChainId: 1,
   },
 ];
@@ -357,6 +368,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0x4200000000000000000000000000000000000010",
       data: "0xa3a79548000000000000000000000000747e42eb0591547a0ab429b3627816208c734ea70000000000000000000000000926ef19fb9c6c8e31eeaeb92ed01aadfd605baa0000000000000000000000000000000000000000000001fb52d1ba278640426d0000000000000000000000000000000000000000000000000000000000030d4000000000000000000000000000000000000000000000000000000000000000a0000000000000000000000000000000000000000000000000000000000000000e7375706572627269646765313034000000000000000000000000000000000000",
       value: "0",
+    },
+  },
+  {
+    id: "arbitrum-arbsys-native-withdrawal-request",
+    group: "bridges",
+    label: "Arbitrum native withdrawal request",
+    summary: "Confirmed Arbitrum → Ethereum ArbSys request, block 501,543,962. It shows only submitted native value and L1 recipient; message inclusion, proof, execution, and final receipt stay unresolved.",
+    source: "confirmed EVM",
+    transaction: {
+      chainId: 42161,
+      from: "0x2ce910fbba65b454bbaf6a18c952a70f3bcd8299",
+      to: "0x0000000000000000000000000000000000000064",
+      data: "0x25e160630000000000000000000000002ce910fbba65b454bbaf6a18c952a70f3bcd8299",
+      value: "67150000000000000000",
     },
   },
   {
