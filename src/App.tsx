@@ -34,6 +34,7 @@ import {
   layerZeroV2Ofts,
   opStackPortals,
   stargateV2Pools,
+  zksyncBridgehubs,
   sampleGroups,
   samplesInGroup,
   transactionSamples,
@@ -51,6 +52,7 @@ const parser = createDefaultParser({
   layerZeroV2Ofts,
   opStackPortals,
   stargateV2Pools,
+  zksyncBridgehubs,
   uniswapV3Routers,
   uniswapUniversalRouters,
 });
