@@ -2,6 +2,7 @@ import type {
   CelerCbridgeBridge,
   CircleCctpV1TokenMessenger,
   LayerZeroV2Oft,
+  OpStackPortal,
   StargateV2Pool,
   TransactionInput,
   UniswapUniversalRouter,
@@ -80,6 +81,15 @@ export const stargateV2Pools: readonly StargateV2Pool[] = [
     asset: "native",
     // Endpoint ids are distinct from EVM chain ids.
     destinations: [{ endpointId: 30110, chainId: 42161 }],
+  },
+];
+
+export const opStackPortals: readonly OpStackPortal[] = [
+  {
+    chainId: 1,
+    address: "0xbeb5fc579115071764c7423a4f12edde41f106ed",
+    // Destination must be trusted configuration, never inferred from address.
+    destinationChainId: 10,
   },
 ];
 
@@ -168,6 +178,20 @@ export const transactionSamples: readonly TransactionSample[] = [
       to: "0xbd3fa81b58ba92a82136038b25adec7066af3155",
       data: "0x6fd3504e00000000000000000000000000000000000000000000000000000000e8d4a5100000000000000000000000000000000000000000000000000000000000000003000000000000000000000000a875890465da20062bcf3b024bf7d54e69c725a8000000000000000000000000a0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
       value: "0",
+    },
+  },
+  {
+    id: "mainnet-op-stack-portal-native-deposit",
+    group: "bridges",
+    label: "OP Stack Portal ETH deposit",
+    summary: "Confirmed Ethereum → Optimism plain ETH deposit. Contract creation and non-empty L2 calls stay generic by design.",
+    source: "confirmed mainnet",
+    transaction: {
+      chainId: 1,
+      from: "0xf70da97812cb96acdf810712aa562db8dfa3dbef",
+      to: "0xbeb5fc579115071764c7423a4f12edde41f106ed",
+      data: "0xe9e05c42000000000000000000000000f70da97812cb96acdf810712aa562db8dfa3dbef0000000000000000000000000000000000000000000000008cc6a219b3c3f2d800000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000000",
+      value: "10143973441972466392",
     },
   },
   {
